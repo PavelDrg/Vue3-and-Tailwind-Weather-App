@@ -12,13 +12,25 @@
         class="absolute bg-weather-secondary text-white w-full shadow-md py-2 px-1 top-[66px]"
         v-if="searchResults"
       >
-        <li
-          v-for="result in searchResults.data"
-          :key="result.id"
-          class="py-2 cursor-pointer"
+        <p class="py-2" v-if="searchError">
+          Sorry, something went wrong, please try again.
+        </p>
+        <p
+          class="py-2"
+          v-if="!serverError && Object.keys(searchResults.data).length === 0"
         >
-          {{ result.display_name }}
-        </li>
+          No locations found, try a different term.
+        </p>
+        <template v-else>
+          <li
+            v-for="result in searchResults.data"
+            :key="result.id"
+            class="py-2 cursor-pointer"
+            @click="previewCity(result)"
+          >
+            {{ result.display_name }}
+          </li>
+        </template>
       </ul>
     </div>
   </main>
@@ -27,19 +39,45 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const previewCity = (result) => {
+  console.log(result);
+  const [city, ...rest] = result.display_name.split(",");
+  const [country] = rest.reverse();
+  router.push({
+    name: "cityView",
+    params: {
+      country: country.replaceAll(" ", ""),
+      city: city.replaceAll(" ", ""),
+    },
+    query: {
+      lat: result.lat,
+      lon: result.lon,
+      preview: true,
+    },
+  });
+};
 
 const searchQuery = ref("");
 const queryTimeout = ref(null);
 const searchResults = ref(null);
+const searchError = ref(null);
 
 const getSearchResults = () => {
   clearTimeout(queryTimeout.value);
   queryTimeout.value = setTimeout(async () => {
     if (searchQuery.value !== "") {
-      const result = await axios.get(
-        `https://geocode.maps.co/search?q=${searchQuery.value}`
-      );
-      searchResults.value = result;
+      try {
+        const result = await axios.get(
+          `https://geocode.maps.co/search?q=${searchQuery.value}`
+        );
+        searchResults.value = result;
+      } catch {
+        searchError.value = true;
+      }
+
       return;
     }
     searchResults.value = null;
