@@ -50,7 +50,7 @@ const previewCity = (result) => {
     name: "cityView",
     params: {
       country: country.replaceAll(" ", ""),
-      city: city.replaceAll(" ", ""),
+      city: city.replaceAll(" ", "-"),
     },
     query: {
       lat: result.lat,
