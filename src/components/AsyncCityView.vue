@@ -73,7 +73,11 @@ const getWeatherData = async () => {
       "eee, dd MMM, h:mm a"
     );
 
-    console.log(weatherData);
+    // console.log(weatherData);
+
+    //Flicker Delay
+    await new Promise((res) => setTimeout(res, 1000));
+
     return weatherData;
   } catch (err) {
     console.log(err);
