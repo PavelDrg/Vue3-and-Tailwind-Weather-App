@@ -61,6 +61,7 @@ import { ref } from "vue";
 import { uid } from "uid";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 import BaseModal from "./BaseModal.vue";
+import { quartersInYear } from "date-fns";
 
 const savedCities = ref([]);
 const route = useRoute();
@@ -85,6 +86,7 @@ const addCity = () => {
 
   let query = Object.assign({}, route.query);
   delete query.preview;
+  query.id = locationObj.id;
   router.replace({ query });
 };
 
