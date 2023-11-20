@@ -35,14 +35,6 @@
 
     <hr class="border-white border-opacity-10 border w-5/6" />
 
-    <!-- Hourly Weather -->
-    <div class="max-w-screen-md w-full py12">
-      <div class="mx-8 text-white">
-        <h2 class="mb-4">Hourly Weather</h2>
-        <div class="flex gap-10 overflow-x-scroll"></div>
-      </div>
-    </div>
-
     <div
       class="flex items-center gap-2 py-12 text-white cursor-pointer duration-150 hover:text-red-500"
       @click="removeCity"
